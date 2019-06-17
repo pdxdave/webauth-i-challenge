@@ -40,10 +40,9 @@ router.post('/login', async (req, res) => {
 })
 
 
-router.get('./users', restricted, async (req, res) => {
+router.get('/users', restricted, async (req, res) => {
     try {
         const users = await UsersModel.find()
-        console.log('get', users)
         res.status(200).json(users)
     } catch (error) {
         res.status(500).json(error)
@@ -52,10 +51,11 @@ router.get('./users', restricted, async (req, res) => {
 
 
 // middleware 
-async function restricted() {
+async function restricted(req, res, next) {
     const {username, password} = req.headers;
 
     if(username && password) {
+      
         try{
             const user = await UsersModel.findBy({username})
             if(user && bcrypt.compareSync(password, user.password)){
