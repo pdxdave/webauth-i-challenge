@@ -15,9 +15,9 @@ server.use(cors());
 server.use(logger)
 
 // router
-// const AuthenticateRouter = require('./someplace/someplace', AuthenticateRouter);
+const AuthenticateRouter = require('./routerInfo/usersRouter');
 
-// server.use('/someplace/someplace', AuthenticateRouter);
+server.use('/auth', AuthenticateRouter);
 
 // test output
 server.get('/', (req, res) => {
