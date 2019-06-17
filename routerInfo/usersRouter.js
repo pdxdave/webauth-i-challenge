@@ -37,7 +37,38 @@ router.post('/login', async (req, res) => {
     } catch (error) {
         res.status(500).json(error)
     }
-    
 })
+
+
+router.get('./users', restricted, async (req, res) => {
+    try {
+        const users = await UsersModel.find()
+        console.log('get', users)
+        res.status(200).json(users)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
+
+// middleware 
+async function restricted() {
+    const {username, password} = req.headers;
+
+    if(username && password) {
+        try{
+            const user = await UsersModel.findBy({username})
+            if(user && bcrypt.compareSync(password, user.password)){
+                next();
+            } else {
+                res.status(401).json({message: "Invalid Credentials"})
+            }
+        } catch (error) {
+            res.status(500).json(error)
+        }
+    } else {
+        res.status(400).json({ message: "Please provide credentials"})
+    }
+}
 
 module.exports = router;
